@@ -10,9 +10,10 @@ server.use(helmet());
 server.use(express.json());
 
 server.get("/", (req, res) => {
-  res.send(`<h2>Let's write some middleware!</h2>`);
+  
   User.get()
     .then(users => {
+      res.send(`<h2>Here you see a list of all our users</h2>`);
       res.status(200).json(users);
     })
     .catch(error => {
