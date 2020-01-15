@@ -38,8 +38,8 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", (req, res) => {
-  // do your magic!
+router.get("/:id", validateUserId, (req, res) => {
+  res.json(req.user);
 });
 
 router.get("/:id/posts", (req, res) => {
