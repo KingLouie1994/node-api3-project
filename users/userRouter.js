@@ -8,6 +8,8 @@ const {
   remove
 } = require("./userDb");
 
+const posts = require("../posts/postDb");
+
 const router = express.Router();
 
 router.post("/", validateUser, (req, res) => {
@@ -22,8 +24,18 @@ router.post("/", validateUser, (req, res) => {
     });
 });
 
-router.post("/:id/posts", (req, res) => {
-  // do your magic!
+router.post("/:id/posts", [validateUserId, validatePost], (req, res) => {
+  const info = { ...req.body, user_id: req.user.id };
+  posts
+    .insert(info)
+    .then(post => {
+      res.status(201).json(post);
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "There is an error creating the new post"
+      });
+    });
 });
 
 router.get("/", (req, res) => {
@@ -74,8 +86,16 @@ router.delete("/:id", validateUserId, (req, res) => {
     });
 });
 
-router.put("/:id", (req, res) => {
-  // do your magic!
+router.put("/:id", [validateUserId, validateUser], (req, res) => {
+  update(req.params.id, req.body)
+    .then(user => {
+      res.status(200).json(user);
+    })
+    .catch(err => {
+      res.status(500).json({
+        message: "There is an error updating this user"
+      });
+    });
 });
 
 //custom middleware
