@@ -42,12 +42,36 @@ router.get("/:id", validateUserId, (req, res) => {
   res.json(req.user);
 });
 
-router.get("/:id/posts", (req, res) => {
-  // do your magic!
+router.get("/:id/posts", validateUserId, (req, res) => {
+  getUserPosts(req.user.id)
+    .then(posts => {
+      if (posts.length > 0) {
+        res.status(200).json(posts);
+      } else {
+        res.status(200).json({
+          message: "This user doesn't have any comments"
+        });
+      }
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "There is an error retreiving this users posts"
+      });
+    });
 });
 
-router.delete("/:id", (req, res) => {
-  // do your magic!
+router.delete("/:id", validateUserId, (req, res) => {
+  remove(req.user.id)
+    .then(() => {
+      res.status(200).json({
+        message: "User got deleted"
+      });
+    })
+    .catch(error => {
+      res.status(500).json({
+        message: "There is an error deleting this user"
+      });
+    });
 });
 
 router.put("/:id", (req, res) => {
@@ -88,12 +112,12 @@ function validateUser(req, res, next) {
 }
 
 function validatePost(req, res, next) {
-  if (Object.keys(req.body).length) {
+  if (Object.keys(req.body).length && req.body.text) {
     next();
   } else if (Object.keys(req.body).length === 0) {
-    res.status(400).json({ message: 'missing post data' });
+    res.status(400).json({ message: "missing post data" });
   } else {
-    res.status(400).json({ message: 'missing required text field' });
+    res.status(400).json({ message: "missing required text field" });
   }
 }
 
