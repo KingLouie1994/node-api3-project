@@ -10,7 +10,7 @@ server.use(helmet());
 server.use(express.json());
 
 server.get("/", (req, res) => {
-  // res.send(`<h2>Let's write some middleware!</h2>`);
+  res.send(`<h2>Let's write some middleware!</h2>`);
   User.get()
     .then(users => {
       res.status(200).json(users);
