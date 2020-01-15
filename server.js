@@ -10,11 +10,13 @@ server.use(helmet());
 server.use(express.json());
 
 server.get("/", (req, res) => {
-  
+  const message = `<h2>Here you see a list of all our users</h2>`;
   User.get()
     .then(users => {
-      res.send(`<h2>Here you see a list of all our users</h2>`);
-      res.status(200).json(users);
+      res.status(200).json({
+        message: message,
+        users
+      });
     })
     .catch(error => {
       res.status(500).json({
