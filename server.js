@@ -10,7 +10,7 @@ server.use(helmet());
 server.use(express.json());
 
 server.get("/", (req, res) => {
-  const message = `<h2>Here you see a list of all our users</h2>`;
+  const message = `Here you see a list of all our users`;
   User.get()
     .then(users => {
       res.status(200).json({
